@@ -1,2 +1,2 @@
 # Include hook code here
-require 'acts_as_eventable'
+require 'eventable'
