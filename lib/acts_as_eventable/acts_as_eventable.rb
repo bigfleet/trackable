@@ -7,6 +7,7 @@ module ActsAsEventable
 
     def acts_as_eventable(options)
       send :include, InstanceMethods
+      has_many :events, :as => :eventable, :dependent => :destroy
     end
   end
 

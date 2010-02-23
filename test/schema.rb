@@ -11,4 +11,13 @@ ActiveRecord::Schema.define(:version => 0) do
 
     t.timestamps
   end
+  # This is the active table
+  create_table :events, :force => true do |t|
+    t.string   :eventable_type, :null => false
+    t.integer  :eventable_id,   :null => false
+    t.string   :field_name,     :null => false
+    t.string   :whodunnit
+    t.string   :message
+    t.datetime :created_at
+  end
 end
