@@ -8,11 +8,14 @@ module ActsAsEventable
     def acts_as_eventable(options)
       send :include, InstanceMethods
       has_many :events, :as => :eventable, :dependent => :destroy
+      after_save :record_events
     end
   end
 
   module InstanceMethods
-    
+    def record_events
+      raise "I was called!"
+    end
   end
 end
 
