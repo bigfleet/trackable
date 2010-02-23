@@ -6,7 +6,8 @@ class ActsAsEventableTest < Test::Unit::TestCase
 
   class Foo < ActiveRecord::Base
     acts_as_eventable :events =>{
-      :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."}
+      :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."},
+      :custom_status => {:message => Proc.new {|n| "The value of a custom string field changed to #{n}" }}
     }
     belongs_to :bar, :class_name => "ActsAsEventableTest::Bar"
   end
@@ -69,6 +70,27 @@ class ActsAsEventableTest < Test::Unit::TestCase
     assert_equal "Status changed to New", foo.events.first.message
     assert_equal "Status changed to Old", foo.events.last.message    
   end
+  
+  def test_desired_custom_string_change_trigger
+    foo = Foo.create
+    foo.update_attribute(:custom_status, "New")
+    assert_equal 1, foo.events.size
+  end
+  
+  def test_desired_custom_string_messaging
+    foo = Foo.create
+    foo.update_attribute(:custom_status, "New")
+    assert_equal "The value of a custom string field changed to New", foo.events.first.message
+  end
+  
+  def test_desired_custom_string_stackability
+    foo = Foo.create
+    foo.update_attribute(:custom_status, "Old")
+    sleep 1 #mur    
+    foo.update_attribute(:custom_status, "New")    
+    assert_equal "The value of a custom string field changed to New", foo.events.first.message
+    assert_equal "The value of a custom string field changed to Old", foo.events.last.message    
+  end  
   
   def test_desired_reference_change_trigger
     foo = Foo.create
