@@ -46,7 +46,7 @@ class ActsAsEventableControllerTest < ActionController::TestCase #Test::Unit::Te
   test 'update' do
     w = Foo.create :status => 'Duvel'
     assert_equal 1, w.events.length
-    put :update, :id => w.id, :widget => { :status => 'Bugle' }
+    put :update, :id => w.id, :foo => { :status => 'Bugle' }
     foo = assigns(:foo)
     assert_equal 2, foo.events.length
     assert_equal 153, foo.events.last.whodunnit.to_i
