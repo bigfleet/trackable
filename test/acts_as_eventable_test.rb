@@ -4,6 +4,9 @@ class ActsAsEventableTest < Test::Unit::TestCase
   load_schema
 
   class Foo < ActiveRecord::Base
+    acts_as_eventable :events =>{
+      :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."}
+    }
   end
 
   class Bar < ActiveRecord::Base
@@ -12,5 +15,8 @@ class ActsAsEventableTest < Test::Unit::TestCase
   def test_schema_has_loaded_correctly
     assert_equal [], Foo.all
     assert_equal [], Bar.all
+  end
+  
+  def test_desired_boolean_messaging
   end
 end
