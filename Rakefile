@@ -5,11 +5,11 @@ require 'rake/rdoctask'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "acts_as_eventable"
+    gem.name = "trackable"
     gem.summary = %Q{Add a readable event history to your models}
     gem.description = %Q{Add a readable event history to your models}
     gem.email = "jim@jimvanfleet.com"
-    gem.homepage = "http://github.com/bigfleet/acts_as_eventable"
+    gem.homepage = "http://github.com/bigfleet/trackable"
     gem.authors = ["bigfleet"]
     gem.add_development_dependency "ruby-sqlite", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -33,7 +33,7 @@ end
 desc 'Generate documentation for the acts_as_eventable plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'ActsAsEventable'
+  rdoc.title    = 'Trackable'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
