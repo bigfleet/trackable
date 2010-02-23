@@ -20,7 +20,8 @@ module ActsAsEventable
 
   module InstanceMethods
     def record_events
-      raise self.class.eventable_options.inspect
+      change_keys = changes.keys.select{ |key| self.class.eventable_options[:events].keys.include?(key) }
+      raise change_keys.inspect if change_keys && !change_keys.empty?
     end
   end
 end
