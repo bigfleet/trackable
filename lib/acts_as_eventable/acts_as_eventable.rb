@@ -1,4 +1,4 @@
-module Yaffle
+module ActsAsEventable
   def self.included(base)
     base.send :extend, ClassMethods
   end
@@ -14,3 +14,5 @@ module Yaffle
     
   end
 end
+
+ActiveRecord::Base.send :include, ActsAsEventable
