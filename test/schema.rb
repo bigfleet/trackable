@@ -4,6 +4,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string :status
     t.string :custom_status    
     t.integer :bar_id
+    t.integer :custom_bar_id    
 
     t.timestamps
   end

@@ -6,7 +6,12 @@ class Event < ActiveRecord::Base
       eventable_options[:events][key.to_sym][new_val]
     elsif eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][:message]
       the_proc = eventable_options[:events][key.to_sym][:message]
-      the_proc.call(new_val)
+      if key.index("_id") # hackish, but this is a convention
+        reference = key[0..-4].to_sym
+        the_proc.call(model.send(reference).to_s)
+      else
+        the_proc.call(new_val)
+      end
     elsif key.index("_id") # hackish, but this is a convention
       reference = key[0..-4].to_sym
       "#{key.titleize} changed to #{model.send(reference).to_s}"

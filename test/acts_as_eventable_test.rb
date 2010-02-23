@@ -7,9 +7,11 @@ class ActsAsEventableTest < Test::Unit::TestCase
   class Foo < ActiveRecord::Base
     acts_as_eventable :events =>{
       :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."},
-      :custom_status => {:message => Proc.new {|n| "The value of a custom string field changed to #{n}" }}
+      :custom_status => {:message => Proc.new {|n| "The value of a custom string field changed to #{n}" }},
+      :custom_bar_id => {:message => Proc.new{|n| "Active Bar set to #{n}"}}
     }
     belongs_to :bar, :class_name => "ActsAsEventableTest::Bar"
+    belongs_to :custom_bar, :class_name => "ActsAsEventableTest::Bar"
   end
 
   class Bar < ActiveRecord::Base
@@ -116,5 +118,30 @@ class ActsAsEventableTest < Test::Unit::TestCase
     assert_equal "Bar changed to Jelly", foo.events.first.message
     assert_equal "Bar changed to Peanut Butter", foo.events.last.message    
   end
+  
+  def test_desired_custom_reference_change_trigger
+    foo = Foo.create
+    bar = Bar.create(:name => "Baloney")
+    foo.custom_bar = bar; foo.save
+    assert_equal 1, foo.events.size
+  end
+  
+  def test_desired_custom_reference_messaging
+    foo = Foo.create
+    bar = Bar.create(:name => "Baloney")
+    foo.custom_bar = bar; foo.save
+    assert_equal "Active Bar set to Baloney", foo.events.first.message
+  end
+  
+  def test_desired_custom_reference_stackability
+    foo = Foo.create
+    bar1 = Bar.create(:name => "Peanut Butter")
+    bar2 = Bar.create(:name => "Jelly")
+    foo.custom_bar = bar1; foo.save
+    sleep 1 #mur    
+    foo.custom_bar = bar2; foo.save
+    assert_equal "Active Bar set to Jelly", foo.events.first.message
+    assert_equal "Active Bar set to Peanut Butter", foo.events.last.message    
+  end  
   
 end
