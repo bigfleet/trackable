@@ -1,22 +1,17 @@
 class ActsAsEventableMigration < ActiveRecord::Migration
   def self.up
-    create_table :event_types do |t|
-      t.string :name
-    end
-
     create_table :events do |t|
-      t.integer :eventable_id, :default => 0, :null => false
-      t.string :eventable_type, :limit => 25, :default => "", :null => false
-      t.integer :event_type_id
-
-      t.timestamps
+      t.string   :eventable_type, :null => false
+      t.integer  :eventable_id,   :null => false
+      t.string   :field_name,     :null => false
+      t.string   :whodunnit
+      t.string   :message
+      t.datetime :created_at
     end
-    add_index :events, [:eventable_id, :eventable_type]  
-    add_index :events, :event_type_id
+    add_index :events, [:eventable_id, :eventable_type, :field_name]
   end
 
   def self.down
     drop_table :events
-    drop_table :event_types
   end
 end
