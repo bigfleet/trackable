@@ -51,4 +51,19 @@ class ActsAsEventableTest < Test::Unit::TestCase
     assert_equal 1, foo.events.size
   end
   
+  def test_desired_string_messaging
+    foo = Foo.create
+    foo.update_attribute(:status, "New")
+    assert_equal "Status changed to New", foo.events.first.message
+  end
+  
+  def test_desired_string_stackability
+    foo = Foo.create
+    foo.update_attribute(:status, "Old")
+    sleep 1 #mur    
+    foo.update_attribute(:status, "New")    
+    assert_equal "Status changed to New", foo.events.first.message
+    assert_equal "Status changed to Old", foo.events.last.message    
+  end  
+  
 end
