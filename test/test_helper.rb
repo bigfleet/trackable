@@ -5,6 +5,7 @@ require 'rubygems'
 require 'test/unit'
 
 require File.expand_path(File.join(ENV['RAILS_ROOT'], 'config/environment.rb'))
+require 'models'
 
 def load_schema
   config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
