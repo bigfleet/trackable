@@ -2,6 +2,7 @@ ActiveRecord::Schema.define(:version => 0) do
   create_table :foos, :force => true do |t|
     t.boolean :no_homers
     t.string :status
+    t.string :custom_status    
     t.integer :bar_id
 
     t.timestamps

@@ -43,5 +43,12 @@ class ActsAsEventableTest < Test::Unit::TestCase
     foo.update_attribute(:no_homers, false)    
     assert_equal "Homers have been allowed.", foo.events.first.message    
     assert_equal "Homers have been barred.", foo.events.last.message
-  end  
+  end
+  
+  def test_desired_string_change_trigger
+    foo = Foo.create
+    foo.update_attribute(:status, "New")
+    assert_equal 1, foo.events.size
+  end
+  
 end
