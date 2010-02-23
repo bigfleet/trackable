@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class ActsAsEventableTest < Test::Unit::TestCase
+
   load_schema
 
   class Foo < ActiveRecord::Base
@@ -13,8 +14,10 @@ class ActsAsEventableTest < Test::Unit::TestCase
   end
 
   def test_schema_has_loaded_correctly
-    assert_equal [], Foo.all
-    assert_equal [], Bar.all
+    Foo.create
+    Bar.create
+    assert Foo.count >= 1
+    assert Bar.count >= 1    
   end
   
   def test_desired_boolean_messaging
