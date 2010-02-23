@@ -20,8 +20,8 @@ module ActsAsEventable
 
   module InstanceMethods
     def record_events
-      change_keys = changes.keys.select{ |key| self.class.eventable_options[:events].keys.include?(key) }
-      raise change_keys.inspect if change_keys && !change_keys.empty?
+      active_keys = changes.keys.reject{ |key| %w{id created_at updated_at}.include?(key)}
+      raise active_keys.inspect unless active_keys.empty?
     end
   end
 end
