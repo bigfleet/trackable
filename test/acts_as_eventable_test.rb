@@ -18,5 +18,8 @@ class ActsAsEventableTest < Test::Unit::TestCase
   end
   
   def test_desired_boolean_messaging
+    foo = Foo.create
+    foo.update_attribute(:no_homers, true)
+    assert_equal 1, foo.events.size
   end
 end
