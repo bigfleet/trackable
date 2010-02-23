@@ -7,7 +7,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "acts_as_eventable"
     gem.summary = %Q{Add a readable event history to your models}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{Add a readable event history to your models}
     gem.email = "jim@jimvanfleet.com"
     gem.homepage = "http://github.com/bigfleet/acts_as_eventable"
     gem.authors = ["bigfleet"]
