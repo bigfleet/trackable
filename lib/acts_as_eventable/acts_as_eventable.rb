@@ -21,7 +21,10 @@ module ActsAsEventable
   module InstanceMethods
     def record_events
       active_keys = changes.keys.reject{ |key| %w{id created_at updated_at}.include?(key)}
-      raise active_keys.inspect unless active_keys.empty?
+      active_keys.map do |key|
+        old_val, new_val = changes[key]
+        events.create(:field_name => key)
+      end
     end
   end
 end
