@@ -13,7 +13,7 @@ module ActsAsEventable
         self.eventable_options = options
       }
       send :include, InstanceMethods
-      has_many :events, :as => :eventable, :dependent => :destroy
+      has_many :events, :as => :eventable, :dependent => :destroy, :order => "created_at desc"
       after_save :record_events
     end
   end

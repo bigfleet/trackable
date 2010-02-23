@@ -35,4 +35,13 @@ class ActsAsEventableTest < Test::Unit::TestCase
     foo.update_attribute(:no_homers, true)
     assert_equal "Homers have been barred.", foo.events.first.message
   end
+
+  def test_desired_boolean_messaging_stackable
+    foo = Foo.create
+    foo.update_attribute(:no_homers, true)
+    sleep 1 #mur
+    foo.update_attribute(:no_homers, false)    
+    assert_equal "Homers have been allowed.", foo.events.first.message    
+    assert_equal "Homers have been barred.", foo.events.last.message
+  end  
 end
