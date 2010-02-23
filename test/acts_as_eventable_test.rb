@@ -8,9 +8,13 @@ class ActsAsEventableTest < Test::Unit::TestCase
     acts_as_eventable :events =>{
       :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."}
     }
+    belongs_to :bar, :class_name => "ActsAsEventableTest::Bar"
   end
 
   class Bar < ActiveRecord::Base
+    def to_s
+      name
+    end
   end
 
   def test_schema_has_loaded_correctly
@@ -64,6 +68,31 @@ class ActsAsEventableTest < Test::Unit::TestCase
     foo.update_attribute(:status, "New")    
     assert_equal "Status changed to New", foo.events.first.message
     assert_equal "Status changed to Old", foo.events.last.message    
-  end  
+  end
+  
+  def test_desired_reference_change_trigger
+    foo = Foo.create
+    bar = Bar.create(:name => "Baloney")
+    foo.bar = bar; foo.save
+    assert_equal 1, foo.events.size
+  end
+  
+  def test_desired_reference_messaging
+    foo = Foo.create
+    bar = Bar.create(:name => "Baloney")
+    foo.bar = bar; foo.save
+    assert_equal "Bar changed to Baloney", foo.events.first.message
+  end
+  
+  def test_desired_reference_stackability
+    foo = Foo.create
+    bar1 = Bar.create(:name => "Peanut Butter")
+    bar2 = Bar.create(:name => "Jelly")
+    foo.bar = bar1; foo.save
+    sleep 1 #mur    
+    foo.bar = bar2; foo.save
+    assert_equal "Bar changed to Jelly", foo.events.first.message
+    assert_equal "Bar changed to Peanut Butter", foo.events.last.message    
+  end
   
 end
