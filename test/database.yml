@@ -1,0 +1,3 @@
+sqlite:
+  :adapter: sqlite
+  :dbfile: vendor/plugins/acts_as_eventable/test/acts_as_eventable_plugin.sqlite.db
