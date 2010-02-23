@@ -5,7 +5,7 @@ module ActsAsEventable
 
   module ClassMethods
 
-    def acts_as_eventable
+    def acts_as_eventable(options)
       send :include, InstanceMethods
     end
   end
