@@ -1,4 +1,4 @@
-# ActsAsEventable
+# Trackable
 require 'trackable/acts_as_trackable'
 require 'trackable/event'
 

@@ -1,4 +1,4 @@
-module ActsAsEventable
+module ActsAsTrackable
   def self.included(base)
     base.send :extend, ClassMethods
     base.instance_eval{
@@ -8,7 +8,7 @@ module ActsAsEventable
 
   module ClassMethods
 
-    def acts_as_eventable(options)
+    def trackable(options)
       instance_eval{
         self.eventable_options = options
       }
@@ -29,4 +29,4 @@ module ActsAsEventable
   end
 end
 
-ActiveRecord::Base.send :include, ActsAsEventable
+ActiveRecord::Base.send :include, ActsAsTrackable

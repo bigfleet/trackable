@@ -25,7 +25,7 @@ class FoosController < ApplicationController
 end
 
 
-class ActsAsEventableControllerTest < ActionController::TestCase #Test::Unit::TestCase
+class TrackableControllerTest < ActionController::TestCase #Test::Unit::TestCase
   def setup
     @controller = FoosController.new
     @request = ActionController::TestRequest.new
