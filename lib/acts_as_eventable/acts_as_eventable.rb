@@ -23,7 +23,7 @@ module ActsAsEventable
       active_keys = changes.keys.reject{ |key| %w{id created_at updated_at}.include?(key)}
       active_keys.map do |key|
         old_val, new_val = changes[key]
-        events.create(Event.attributes_from(self.class.eventable_options, key, old_val, new_val))
+        events.create(Event.attributes_from(self, key, old_val, new_val))
       end
     end
   end
