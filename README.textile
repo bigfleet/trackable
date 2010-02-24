@@ -1,0 +1,87 @@
+trackable is an add-on to Rails that provides for user-readable, fully configurable messaging on change tracking in ActiveRecord models.
+
+trackable is inspired by two plugins: "acts_as_eventable":http://github.com/netphase/acts_as_eventable from Netphase and "paper_trail":http://github.com/airblade/paper_trail from Air Blade Software.  I wanted something that had the human-readability of acts_as_eventable, but with custom messaging that could be dictated by Ruby code and not database-bound.  I also wanted the potential to track user involvement, like paper_trail does.  So the trackable gem was born!
+
+h2. Use Case
+
+You want something that looks like this:
+
+!http://img.skitch.com/20100224-t337bxe38pkr3e2fe92m7spipb.jpg!
+
+You can choose what message to show when the user selects booleans.  For string fields, you can pick between a sensible default, a custom message generator, or specific enumerated values.  For references to other models, all you need is a <code>to_s</code> defined on them, and you'll get a similar choice to string values.  You can choose what to include and what not to include, and can get up and running in no time at all.
+
+h2. Installation
+
+Add the following to your <code>config/environment.rb</code> file.
+
+<pre><code>  config.gem 'trackable'</code></pre>
+
+You'll then need to install the gem using <code>rake gems:install</code> or your sudo equivalent.
+
+After the gem is installed, create your migration with this command:
+
+<pre><code>script/generate trackable_migration</code></pre>
+
+And you're ready!  When that command completes and you run your migrations with <code>rake db:migrate</code>, you'll have a new table named <code>events</code> that trackable will keep its event information in.  Let's take a look at what we get.
+
+h2. Integration
+
+If you're the type to not read the instructions, and you're already getting antsy, just drop <code>trackable</code> into one of your models, and check out what you get in your <code>events</code> association.  Simple as that!  
+
+For those that like a bit more detail, let's take a look at the following bit of code and see what we can get out of it.
+
+<pre><code>
+# create_table :foos, :force => true do |t|
+#   t.boolean :no_homers
+#   t.string :status
+#   t.string :custom_status
+#   t.string :do_not_track
+#   t.integer :bar_id
+#   t.integer :custom_bar_id    
+# 
+#   t.timestamps
+# end
+
+class Foo < ActiveRecord::Base
+  trackable :events =>{
+    :no_homers => {true => "Homers have been barred.", false => "Homers have been allowed."},
+    :custom_status => {:message => Proc.new {|n| "The value of a custom string field changed to #{n}" }},
+    :custom_bar_id => {:message => Proc.new{|n| "Active Bar set to #{n}"}}
+  }, :exclude => :do_not_track
+  belongs_to :bar, :class_name => "Bar"
+  belongs_to :custom_bar, :class_name => "Bar"
+end
+</code></pre>
+
+h3. Booleans
+
+For booleans, you can indicate what messages that you'd like by setting up a hash with the true and false messages like this:
+
+<code>{:your_boolean_field_name => {true => "True message", false => "False message"}}</code>
+
+You can use the default message, but most of the time that won't be what you want.
+
+h3. Strings (or integers)
+
+You might not have to do anything.  You'll have a message like "Humanized field name changed to new value" without intervention.  If you do want something custom, you can do this:
+
+<code>{:your_string_field => {:message => Proc.new {|n| "Field value set to #{n}" }}}</code>
+
+The value of <code>n</code> will be the new string value that's been saved in your tracked object.
+
+If you happen to have a string field with only a few values that are known ahead of time, you could use the same sort of signature as the hash in the Boolean example above to set a custom message for each value.  This might be useful in state machines, for example.  You could have something like this.
+
+<pre><code>{:aasm_state_ => {"published" => "Post has been published.",
+                  "submitted" => "Post was submitted for approval"}}</code></pre>
+
+h3. Associations
+
+As long as your association field ends with <code>_id</code>, trackable will call <code>to_s</code> on the new value, and then it'll be treated like the string example above.
+
+h3. Excluding certain fields.
+
+As in the far above example, you can pass an :exclude option with a single field name or an array of field names to ignore.  These won't result events being added.
+
+h2. Questions
+
+I'm available at jim at jimvanfleet dot com, or you can send me a message right here on Github.  You can also open issues here, I'll try to keep an eye on them.
