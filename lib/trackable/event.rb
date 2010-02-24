@@ -18,6 +18,6 @@ class Event < ActiveRecord::Base
     else
       "#{key.titleize} changed to #{new_val}"
     end
-    {:field_name => key, :message => msg, :whodunnit => Eventable.whodunnit}
+    {:field_name => key, :message => msg, :whodunnit => Trackable.whodunnit}
   end
 end

@@ -26,4 +26,4 @@ module Trackable
   end
 end
 
-ActionController::Base.send :include, Eventable
+ActionController::Base.send :include, Trackable

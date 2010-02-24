@@ -1,1 +1,1 @@
-require File.join(File.dirname(__FILE__), '/../lib/eventable')
+require File.join(File.dirname(__FILE__), '/../lib/trackable')
