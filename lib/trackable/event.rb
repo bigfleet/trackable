@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
   def self.attributes_from(model, key, old_val, new_val)
     return if old_val.blank? && new_val.blank? #not something we need to track.
     eventable_options = model.class.eventable_options
+    return if [eventable_options[:exclude]].flatten.include?(key.to_sym)
     msg = if eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][new_val]
       eventable_options[:events][key.to_sym][new_val]
     elsif eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][:message]
