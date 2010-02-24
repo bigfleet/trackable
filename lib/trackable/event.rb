@@ -14,9 +14,9 @@ class Event < ActiveRecord::Base
       end
     elsif key.index("_id") # hackish, but this is a convention
       reference = key[0..-4].to_sym
-      "#{key.titleize} changed to #{model.send(reference).to_s}"
+      "#{key.humanize} changed to #{model.send(reference).to_s}"
     else
-      "#{key.titleize} changed to #{new_val}"
+      "#{key.humanize} changed to #{new_val}"
     end
     {:field_name => key, :message => msg, :whodunnit => Trackable.whodunnit}
   end
