@@ -58,7 +58,21 @@ class TrackableTest < Test::Unit::TestCase
     foo = Foo.new(:status => "")
     foo.save
     assert_equal 0, foo.events.size
-  end  
+  end
+  
+  def test_desired_existing_nil_string_messaging
+    foo = Foo.create(:status => "bazzed")
+    assert_equal 1, foo.events.size    
+    foo.update_attribute(:status, nil)
+    assert_equal 2, foo.events.size
+  end 
+  
+  def test_desired_existing_nil_string_messaging
+    foo = Foo.create(:status => "bazzed")
+    assert_equal 1, foo.events.size    
+    foo.update_attribute(:status, nil)
+    assert_equal 2, foo.events.size
+  end   
     
   def test_desired_string_stackability
     foo = Foo.create
@@ -80,16 +94,7 @@ class TrackableTest < Test::Unit::TestCase
     foo.update_attribute(:custom_status, "New")
     assert_equal "The value of a custom string field changed to New", foo.events.first.message
   end
-  
-  def test_desired_custom_string_stackability
-    foo = Foo.create
-    foo.update_attribute(:custom_status, "Old")
-    sleep 1 #mur    
-    foo.update_attribute(:custom_status, "New")    
-    assert_equal "The value of a custom string field changed to New", foo.events.first.message
-    assert_equal "The value of a custom string field changed to Old", foo.events.last.message    
-  end  
-  
+    
   def test_desired_reference_change_trigger
     foo = Foo.create
     bar = Bar.create(:name => "Baloney")
@@ -103,18 +108,7 @@ class TrackableTest < Test::Unit::TestCase
     foo.bar = bar; foo.save
     assert_equal "Bar changed to Baloney", foo.events.first.message
   end
-  
-  def test_desired_reference_stackability
-    foo = Foo.create
-    bar1 = Bar.create(:name => "Peanut Butter")
-    bar2 = Bar.create(:name => "Jelly")
-    foo.bar = bar1; foo.save
-    sleep 1 #mur    
-    foo.bar = bar2; foo.save
-    assert_equal "Bar changed to Jelly", foo.events.first.message
-    assert_equal "Bar changed to Peanut Butter", foo.events.last.message    
-  end
-  
+    
   def test_desired_custom_reference_change_trigger
     foo = Foo.create
     bar = Bar.create(:name => "Baloney")
@@ -128,16 +122,5 @@ class TrackableTest < Test::Unit::TestCase
     foo.custom_bar = bar; foo.save
     assert_equal "Active Bar set to Baloney", foo.events.first.message
   end
-  
-  def test_desired_custom_reference_stackability
-    foo = Foo.create
-    bar1 = Bar.create(:name => "Peanut Butter")
-    bar2 = Bar.create(:name => "Jelly")
-    foo.custom_bar = bar1; foo.save
-    sleep 1 #mur    
-    foo.custom_bar = bar2; foo.save
-    assert_equal "Active Bar set to Jelly", foo.events.first.message
-    assert_equal "Active Bar set to Peanut Butter", foo.events.last.message    
-  end  
-  
+    
 end
