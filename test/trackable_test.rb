@@ -108,6 +108,12 @@ class TrackableTest < Test::Unit::TestCase
     foo.bar = bar; foo.save
     assert_equal "Bar changed to Baloney", foo.events.first.message
   end
+  
+  def test_desired_reference_like_messaging
+    foo = Foo.create
+    foo.update_attribute(:alternate_identification, "Only a string")
+    assert_equal "Alternate identification changed to Only a string", foo.events.first.message
+  end  
     
   def test_desired_custom_reference_change_trigger
     foo = Foo.create
