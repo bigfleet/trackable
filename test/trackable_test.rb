@@ -48,6 +48,18 @@ class TrackableTest < Test::Unit::TestCase
     assert_equal "Status changed to New", foo.events.first.message
   end
   
+  def test_desired_nil_string_messaging
+    foo = Foo.create
+    foo.update_attribute(:status, nil)
+    assert_equal 0, foo.events.size
+  end
+  
+  def test_desired_new_blank_string_messaging
+    foo = Foo.new(:status => "")
+    foo.save
+    assert_equal 0, foo.events.size
+  end  
+    
   def test_desired_string_stackability
     foo = Foo.create
     foo.update_attribute(:status, "Old")

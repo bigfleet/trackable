@@ -23,7 +23,8 @@ module ActsAsTrackable
       active_keys = changes.keys.reject{ |key| %w{id created_at updated_at}.include?(key)}
       active_keys.map do |key|
         old_val, new_val = changes[key]
-        events.create(Event.attributes_from(self, key, old_val, new_val))
+        attrs = Event.attributes_from(self, key, old_val, new_val)
+        events.create(attrs) if attrs
       end
     end
   end
