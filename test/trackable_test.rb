@@ -128,5 +128,11 @@ class TrackableTest < Test::Unit::TestCase
     foo.custom_bar = bar; foo.save
     assert_equal "Active Bar set to Baloney", foo.events.first.message
   end
+  
+  def test_untracked_changes
+    foo = Foo.create
+    foo.update_attribute(:do_not_track, "Untracked")
+    assert_equal 0, foo.events.size    
+  end
     
 end
