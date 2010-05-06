@@ -2,13 +2,13 @@ module ActsAsTrackable
   def self.included(base)
     base.send :extend, ClassMethods
     base.instance_eval{
-      cattr_accessor :eventable_options
+      class_inheritable_accessor :eventable_options
     } 
   end
 
   module ClassMethods
 
-    def trackable(options)
+    def trackable(options={})
       instance_eval{
         self.eventable_options = options
       }
@@ -20,7 +20,7 @@ module ActsAsTrackable
 
   module InstanceMethods
     def record_events
-      active_keys = changes.keys.reject{ |key| %w{id created_at updated_at}.include?(key)}
+      active_keys = changes.keys.reject{ |key| %w{id created_at created_on updated_at updated_on}.include?(key)}
       active_keys.map do |key|
         old_val, new_val = changes[key]
         attrs = Event.attributes_from(self, key, old_val, new_val)

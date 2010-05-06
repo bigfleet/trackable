@@ -140,5 +140,12 @@ class TrackableTest < Test::Unit::TestCase
     assert_nothing_raised { foo.update_attribute(:not_association_id, 1) }
     assert_equal "Not association changed to 1", foo.events.first.message
   end
+  
+  def test_dropping_trackable_on_model_works
+    assert_nothing_raised { Bar.trackable }
+    bar = Bar.create
+    bar.update_attribute(:name, "Megatron")
+    assert_equal "Name changed to Megatron", bar.events.first.message
+  end
     
 end
