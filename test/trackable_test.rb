@@ -134,5 +134,11 @@ class TrackableTest < Test::Unit::TestCase
     foo.update_attribute(:do_not_track, "Untracked")
     assert_equal 0, foo.events.size    
   end
+  
+  def test_checks_for_associations_when_creating_message
+    foo = Foo.create
+    assert_nothing_raised { foo.update_attribute(:not_association_id, 1) }
+    assert_equal "Not association changed to 1", foo.events.first.message
+  end
     
 end

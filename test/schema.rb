@@ -7,6 +7,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string :do_not_track
     t.integer :bar_id
     t.integer :custom_bar_id    
+    t.integer :not_association_id    
 
     t.timestamps
   end
