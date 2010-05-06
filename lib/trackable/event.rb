@@ -4,7 +4,7 @@ class Event < ActiveRecord::Base
     return if old_val.blank? && new_val.blank? #not something we need to track.
     eventable_options = model.class.eventable_options
     return if [eventable_options[:exclude]].flatten.include?(key.to_sym)
-    reference = key[0..-4].to_sym
+    reference = key[0..-4].to_sym if key.ends_with?("_id")
     msg = if eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][new_val]
       eventable_options[:events][key.to_sym][new_val]
     elsif eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][:message]
