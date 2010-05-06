@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
       eventable_options[:events][key.to_sym][new_val]
     elsif eventable_options[:events][key.to_sym] && eventable_options[:events][key.to_sym][:message]
       the_proc = eventable_options[:events][key.to_sym][:message]
-      if key.ends_with?("_id") # hackish, but this is a convention
+      if key.ends_with?("_id") && model.class.reflect_on_association(reference) # hackish, but this is a convention
         the_proc.call(model.send(reference).to_s)
       else
         the_proc.call(new_val)
