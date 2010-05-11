@@ -147,5 +147,25 @@ class TrackableTest < Test::Unit::TestCase
     bar.update_attribute(:name, "Megatron")
     assert_equal "Name changed to Megatron", bar.events.first.message
   end
+  
+  def test_trackable_can_be_set_to_only_record_on_create
+    Bar.instance_variable_set :@after_save_callbacks, ActiveSupport::Callbacks::CallbackChain.new
+    Bar.trackable :on => :create
+    bar = Bar.create(:name => 'bar')
+    assert_equal "Name changed to bar", bar.events.first.message
+    assert_equal 1, bar.events.count
+    bar.update_attributes(:name => 'baz')
+    assert_equal 1, bar.events.count
+  end
+  
+  def test_trackable_can_be_set_to_only_record_on_update
+    Bar.instance_variable_set :@after_create_callbacks, ActiveSupport::Callbacks::CallbackChain.new
+    Bar.trackable :on => :update
+    bar = Bar.create(:name => 'bar')
+    assert_equal 0, bar.events.count
+    bar.update_attributes(:name => 'baz')
+    assert_equal "Name changed to baz", bar.events.first.message
+    assert_equal 1, bar.events.count
+  end
     
 end

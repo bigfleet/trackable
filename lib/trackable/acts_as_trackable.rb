@@ -14,7 +14,7 @@ module ActsAsTrackable
       }
       send :include, InstanceMethods
       has_many :events, :as => :eventable, :dependent => :destroy, :order => "created_at desc"
-      after_save :record_events
+      send options[:on] ? :"after_#{options[:on]}" : :after_save, :record_events
     end
   end
 
