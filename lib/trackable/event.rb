@@ -23,7 +23,7 @@ class Event < ActiveRecord::Base
   end
   
   def eventable
-    (self.eventable_type.constantize).find(self.eventable_id)
+    (self.eventable_type.constantize).find(self.eventable_id) rescue nil
   end
   
 end

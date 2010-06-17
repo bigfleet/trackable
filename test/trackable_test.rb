@@ -168,4 +168,24 @@ class TrackableTest < Test::Unit::TestCase
     assert_equal 1, bar.events.count
   end
     
+  def test_trackable_can_record_delete_events
+    Bar.instance_variable_set :@after_save_callbacks, ActiveSupport::Callbacks::CallbackChain.new
+    Bar.trackable :on => :create
+    bar = Bar.create(:name => 'bar')
+    assert_equal "Name changed to bar", bar.events.first.message
+    assert_equal 1, bar.events.count
+    bar.destroy
+    assert_equal 4, bar.events.count
+    assert_equal "Bar(#{bar.id}) deleted.", bar.events.last.message
+  end
+  
+  def test_trackable_event_returns_object
+    Bar.instance_variable_set :@after_save_callbacks, ActiveSupport::Callbacks::CallbackChain.new
+    Bar.trackable :on => :create
+    bar = Bar.create(:name => 'bar')
+    assert_equal bar, bar.events.first.eventable
+    bar.destroy
+    assert_equal nil, bar.events.first.eventable
+  end
+    
 end
