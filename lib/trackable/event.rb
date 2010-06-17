@@ -22,4 +22,8 @@ class Event < ActiveRecord::Base
     {:field_name => key, :message => message, :whodunnit => Trackable.whodunnit}
   end
   
+  def eventable
+    (self.eventable_type.constantize).find(self.eventable_id)
+  end
+  
 end

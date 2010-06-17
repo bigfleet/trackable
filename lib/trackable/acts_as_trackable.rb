@@ -32,6 +32,7 @@ module ActsAsTrackable
         events.create(attrs) if attrs
       end
     end
+    
   end
 end
 
