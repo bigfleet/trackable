@@ -15,10 +15,15 @@ module ActsAsTrackable
       send :include, InstanceMethods
       has_many :events, :as => :eventable, :dependent => :destroy, :order => "created_at desc"
       send options[:on] ? :"after_#{options[:on]}" : :after_save, :record_events
+      after_destroy :record_destroy
     end
   end
 
   module InstanceMethods
+    def record_destroy
+      events.create(:whodunnit => Trackable.whodunnit, :field_name => 'id', :message => "#{self.class}(#{self.id}) deleted.")
+    end
+    
     def record_events
       active_keys = changes.keys.reject{ |key| %w{id created_at created_on updated_at updated_on}.include?(key)}
       active_keys.map do |key|
